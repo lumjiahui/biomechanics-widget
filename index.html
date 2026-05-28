@@ -3,160 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biomechanics Study Widget</title>
+  <title>Biomechanics Formula Widget</title>
   <style>
-    :root {
-      --bg:#f7f5f1; --card:#fffdf8; --ink:#24201b; --muted:#746b60; --line:#e4ded5;
-      --accent:#6f8f72; --accent2:#d9ead7; --soft:#f0ebe3; --shadow:0 10px 28px rgba(36,32,27,.08);
-    }
-    body.dark { --bg:#171714; --card:#22211d; --ink:#f4efe6; --muted:#b7aea2; --line:#38352f; --accent:#9ec79f; --accent2:#263827; --soft:#2d2b26; --shadow:0 10px 28px rgba(0,0,0,.25); }
-    *{box-sizing:border-box} body{margin:0;padding:18px;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
-    .widget{max-width:1100px;margin:auto} header{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:16px}
-    .title{display:flex;gap:12px;align-items:center}.icon{width:48px;height:48px;border-radius:17px;display:grid;place-items:center;background:var(--accent2);font-size:25px;box-shadow:var(--shadow)}
-    h1{margin:0;font-size:clamp(1.35rem,3vw,2rem)}.subtitle{color:var(--muted);font-size:.92rem;margin-top:4px}.actions{display:flex;gap:8px;flex-wrap:wrap}
-    button,.pill{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:999px;font-size:.84rem}button{cursor:pointer}button.active{background:var(--accent);color:white;border-color:var(--accent)}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);overflow:hidden}
-    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
-    h2{margin:0 0 12px;font-size:1rem} h3{margin:0 0 7px} label{display:block;margin:10px 0 5px;color:var(--muted);font-size:.82rem}
-    input,select{width:100%;padding:10px 11px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:.95rem;outline:none}
-    input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(111,143,114,.16)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .result{margin-top:14px;padding:14px;border-radius:18px;background:var(--accent2);border:1px solid var(--line)}.result strong{display:block;font-size:1.35rem;margin-top:2px}.formula,.note{color:var(--muted);font-size:.78rem;line-height:1.4;margin-top:7px}
-    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.concept{min-height:126px;padding:15px;border-radius:18px;background:var(--bg);border:1px solid var(--line)}.concept p{margin:0;color:var(--muted);line-height:1.45}
-    .mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini{padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}.mini b{display:block;font-size:1.05rem}.mini span{color:var(--muted);font-size:.78rem}
-    .formula-list{display:grid;gap:9px}.formula-card{padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}.formula-card b{display:block;margin-bottom:3px}.formula-card code{font-size:.9rem;color:var(--accent)}
-    footer{text-align:center;color:var(--muted);font-size:.76rem;margin-top:14px}
-    @media(max-width:850px){body{padding:12px}header{align-items:flex-start;flex-direction:column}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.row,.mini-grid{grid-template-columns:1fr}}
+    :root{--bg:#f7f5f1;--card:#fffdf8;--ink:#24201b;--muted:#746b60;--line:#e4ded5;--accent:#6f8f72;--accent2:#d9ead7;--soft:#f0ebe3;--shadow:0 10px 28px rgba(36,32,27,.08)}
+    body.dark{--bg:#171714;--card:#22211d;--ink:#f4efe6;--muted:#b7aea2;--line:#38352f;--accent:#9ec79f;--accent2:#263827;--soft:#2d2b26;--shadow:0 10px 28px rgba(0,0,0,.25)}
+    *{box-sizing:border-box}body{margin:0;padding:18px;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+    main{max-width:1150px;margin:auto}header{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:16px}.title{display:flex;gap:12px;align-items:center}.icon{width:48px;height:48px;border-radius:17px;display:grid;place-items:center;background:var(--accent2);font-size:25px;box-shadow:var(--shadow)}h1{margin:0;font-size:clamp(1.35rem,3vw,2rem)}.subtitle{color:var(--muted);font-size:.92rem;margin-top:4px}button,.pill{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:999px;font-size:.84rem;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-12{grid-column:span 12}h2{margin:0 0 12px;font-size:1rem}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:block;margin:10px 0 5px;color:var(--muted);font-size:.82rem}input,select{width:100%;padding:10px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:.95rem}.result{margin-top:14px;padding:14px;border-radius:18px;background:var(--accent2);border:1px solid var(--line)}.result strong{display:block;font-size:1.25rem;margin-top:3px}.formula,.note{color:var(--muted);font-size:.78rem;line-height:1.4;margin-top:7px}.formula-bank{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini{padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}.mini b{display:block;margin-bottom:3px}.mini span{color:var(--muted);font-size:.78rem}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tabs button.active{background:var(--accent);color:white;border-color:var(--accent)}.concept{padding:15px;border-radius:18px;background:var(--bg);border:1px solid var(--line);min-height:120px}.concept p{margin:0;color:var(--muted);line-height:1.45}footer{text-align:center;color:var(--muted);font-size:.76rem;margin-top:14px}@media(max-width:850px){body{padding:12px}header{align-items:flex-start;flex-direction:column}.span-4,.span-6{grid-column:span 12}.row,.formula-bank{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <main class="widget">
-    <header>
-      <div class="title"><div class="icon">📐</div><div><h1>Biomechanics Study Lab</h1><div class="subtitle">Pythagoras, momentum, weight, force, torque, power, levers, and more.</div></div></div>
-      <div class="actions"><span class="pill" id="today"></span><button id="themeBtn">Dark mode</button></div>
-    </header>
+<main>
+  <header>
+    <div class="title"><div class="icon">📘</div><div><h1>Biomechanics Formula Lab</h1><div class="subtitle">Interactive calculators for your formula sheet.</div></div></div>
+    <button id="themeBtn">Dark mode</button>
+  </header>
 
-    <section class="grid">
-      <article class="card span-4">
-        <h2>1. Pythagoras Calculator</h2>
-        <div class="row"><div><label>Side a</label><input id="sideA" type="number" value="3" step="0.1"></div><div><label>Side b</label><input id="sideB" type="number" value="4" step="0.1"></div></div>
-        <div class="result">Hypotenuse c<strong id="pythOut"></strong><div class="formula">c = √(a² + b²)</div></div>
-        <p class="note">Biomech use: resultant velocity, displacement, or force from horizontal and vertical components.</p>
-      </article>
+  <section class="grid">
+    <article class="card span-4"><h2>Velocity</h2><div class="row"><div><label>Distance d / m</label><input id="d" type="number" value="20"></div><div><label>Time t / s</label><input id="t" type="number" value="4"></div></div><div class="result">v<strong id="velocityOut"></strong><div class="formula">v = d / t</div></div></article>
+    <article class="card span-4"><h2>Acceleration</h2><div class="row"><div><label>Final velocity vf</label><input id="vf" type="number" value="8"></div><div><label>Initial velocity vi</label><input id="vi" type="number" value="2"></div></div><label>Time t / s</label><input id="accTime" type="number" value="3"><div class="result">a<strong id="accOut"></strong><div class="formula">a = (vf − vi) / t</div></div></article>
+    <article class="card span-4"><h2>Force</h2><div class="row"><div><label>Mass m / kg</label><input id="mass" type="number" value="70"></div><div><label>Acceleration a</label><input id="accel" type="number" value="3"></div></div><div class="result">F<strong id="forceOut"></strong><div class="formula">F = ma</div></div></article>
 
-      <article class="card span-4">
-        <h2>2. Momentum</h2>
-        <div class="row"><div><label>Mass / kg</label><input id="mass" type="number" value="70" step="0.1"></div><div><label>Velocity / m/s</label><input id="velocity" type="number" value="5" step="0.1"></div></div>
-        <div class="result">Momentum<strong id="momOut"></strong><div class="formula">p = m × v</div></div>
-        <p class="note">More mass or velocity means more momentum to stop, redirect, or control.</p>
-      </article>
+    <article class="card span-4"><h2>Weight</h2><div class="row"><div><label>Mass m / kg</label><input id="wmass" type="number" value="70"></div><div><label>Gravity g</label><input id="g" type="number" value="9.81"></div></div><div class="result">W<strong id="weightOut"></strong><div class="formula">W = mg</div></div></article>
+    <article class="card span-4"><h2>Momentum</h2><div class="row"><div><label>Mass m / kg</label><input id="pmass" type="number" value="70"></div><div><label>Velocity v</label><input id="pvel" type="number" value="5"></div></div><div class="result">p<strong id="momentumOut"></strong><div class="formula">p = mv</div></div></article>
+    <article class="card span-4"><h2>Impulse</h2><div class="row"><div><label>Force F / N</label><input id="impForce" type="number" value="300"></div><div><label>Contact time Δt</label><input id="dt" type="number" value="0.25"></div></div><div class="result">J<strong id="impulseOut"></strong><div class="formula">J = FΔt</div></div></article>
 
-      <article class="card span-4">
-        <h2>3. Weight</h2>
-        <div class="row"><div><label>Mass / kg</label><input id="weightMass" type="number" value="70" step="0.1"></div><div><label>Gravity / m/s²</label><input id="gravity" type="number" value="9.81" step="0.01"></div></div>
-        <div class="result">Weight force<strong id="weightOut"></strong><div class="formula">W = m × g</div></div>
-        <p class="note">Weight is a force, measured in newtons. Mass is measured in kilograms.</p>
-      </article>
+    <article class="card span-4"><h2>Impulse from Δ Momentum</h2><div class="row"><div><label>Mass m / kg</label><input id="jmass" type="number" value="70"></div><div><label>vf − vi</label><input id="dv" type="number" value="3"></div></div><div class="result">J = Δp<strong id="deltaPOut"></strong><div class="formula">J = Δp = m(vf − vi)</div></div></article>
+    <article class="card span-4"><h2>Projectile Components</h2><div class="row"><div><label>Launch speed u</label><input id="u" type="number" value="12"></div><div><label>Angle θ / degrees</label><input id="theta" type="number" value="35"></div></div><div class="result">ux / uy<strong id="projOut"></strong><div class="formula">ux = ucosθ · uy = usinθ</div></div></article>
+    <article class="card span-4"><h2>SUVAT: Final Velocity</h2><div class="row"><div><label>Initial u</label><input id="suU" type="number" value="2"></div><div><label>Acceleration a</label><input id="suA" type="number" value="3"></div></div><label>Time t</label><input id="suT" type="number" value="4"><div class="result">v<strong id="suvatVOut"></strong><div class="formula">v = u + at</div></div></article>
 
-      <article class="card span-4">
-        <h2>4. Speed + Acceleration</h2>
-        <div class="row"><div><label>Distance / m</label><input id="distance" type="number" value="20" step="0.1"></div><div><label>Time / s</label><input id="time" type="number" value="4" step="0.1"></div></div>
-        <div class="row"><div><label>Initial velocity</label><input id="u" type="number" value="0" step="0.1"></div><div><label>Final velocity</label><input id="v" type="number" value="8" step="0.1"></div></div>
-        <div class="result">Speed / acceleration<strong id="speedOut"></strong><div class="formula">speed = d/t · a = Δv/t</div></div>
-      </article>
+    <article class="card span-4"><h2>SUVAT: Displacement</h2><div class="row"><div><label>Initial u</label><input id="sU" type="number" value="2"></div><div><label>Time t</label><input id="sT" type="number" value="4"></div></div><label>Acceleration a</label><input id="sA" type="number" value="3"><div class="result">s<strong id="suvatSOut"></strong><div class="formula">s = ut + ½at²</div></div></article>
+    <article class="card span-4"><h2>SUVAT: No Time</h2><div class="row"><div><label>Initial u</label><input id="ntU" type="number" value="2"></div><div><label>Acceleration a</label><input id="ntA" type="number" value="3"></div></div><label>Displacement s</label><input id="ntS" type="number" value="10"><div class="result">v²<strong id="noTimeOut"></strong><div class="formula">v² = u² + 2as</div></div></article>
+    <article class="card span-4"><h2>Angular Velocity</h2><div class="row"><div><label>Angle Δθ</label><input id="ang" type="number" value="180"></div><div><label>Time t</label><input id="angT" type="number" value="2"></div></div><div class="result">ω<strong id="omegaOut"></strong><div class="formula">ω = Δθ / t</div></div></article>
 
-      <article class="card span-4">
-        <h2>5. Force + Impulse</h2>
-        <div class="row"><div><label>Mass / kg</label><input id="forceMass" type="number" value="70" step="0.1"></div><div><label>Acceleration / m/s²</label><input id="accel" type="number" value="3" step="0.1"></div></div>
-        <label>Contact time / s</label><input id="contact" type="number" value="0.25" step="0.01">
-        <div class="result">Force / impulse<strong id="forceOut"></strong><div class="formula">F = m × a · J = F × t</div></div>
-      </article>
+    <article class="card span-4"><h2>Angular Acceleration</h2><div class="row"><div><label>Final ωf</label><input id="wf" type="number" value="10"></div><div><label>Initial ωi</label><input id="wi" type="number" value="2"></div></div><label>Time t</label><input id="wtime" type="number" value="4"><div class="result">α<strong id="alphaOut"></strong><div class="formula">α = (ωf − ωi) / t</div></div></article>
+    <article class="card span-4"><h2>Work Done</h2><div class="row"><div><label>Force F / N</label><input id="workF" type="number" value="500"></div><div><label>Distance d / m</label><input id="workD" type="number" value="0.6"></div></div><div class="result">Work<strong id="workOut"></strong><div class="formula">Work = Fd</div></div></article>
+    <article class="card span-4"><h2>Power</h2><div class="row"><div><label>Work / J</label><input id="powerWork" type="number" value="300"></div><div><label>Time t / s</label><input id="powerT" type="number" value="2"></div></div><div class="row"><div><label>Force F</label><input id="powerF" type="number" value="250"></div><div><label>Velocity v</label><input id="powerV" type="number" value="3"></div></div><div class="result">Power<strong id="powerOut"></strong><div class="formula">P = Work/t or P = Fv</div></div></article>
 
-      <article class="card span-4">
-        <h2>6. Torque</h2>
-        <div class="row"><div><label>Force / N</label><input id="torqueForce" type="number" value="120" step="1"></div><div><label>Moment arm / m</label><input id="arm" type="number" value="0.35" step="0.01"></div></div>
-        <label>Angle / degrees</label><input id="angle" type="number" value="90" step="1">
-        <div class="result">Torque<strong id="torqueOut"></strong><div class="formula">τ = F × r × sinθ</div></div>
-      </article>
+    <article class="card span-6"><h2>Explainer</h2><div class="tabs" id="tabs"></div><div class="concept" id="explain"></div></article>
+    <article class="card span-6"><h2>Quiz</h2><div class="concept" id="quiz"></div><div class="tabs" style="margin-top:12px"><button id="newQ">New question</button><button id="ansQ">Show answer</button></div></article>
 
-      <article class="card span-4">
-        <h2>7. Work + Power</h2>
-        <div class="row"><div><label>Force / N</label><input id="workForce" type="number" value="500" step="1"></div><div><label>Displacement / m</label><input id="disp" type="number" value="0.6" step="0.01"></div></div>
-        <label>Time / s</label><input id="powerTime" type="number" value="1.2" step="0.1">
-        <div class="result">Work / power<strong id="workOut"></strong><div class="formula">Work = F × d · Power = Work/t</div></div>
-      </article>
-
-      <article class="card span-4">
-        <h2>8. Pressure</h2>
-        <div class="row"><div><label>Force / N</label><input id="pressForce" type="number" value="700" step="1"></div><div><label>Area / m²</label><input id="area" type="number" value="0.025" step="0.001"></div></div>
-        <div class="result">Pressure<strong id="pressOut"></strong><div class="formula">P = F / A</div></div>
-        <p class="note">Smaller contact area creates higher pressure, like studs or spikes.</p>
-      </article>
-
-      <article class="card span-4">
-        <h2>9. Lever Advantage</h2>
-        <div class="row"><div><label>Effort arm / m</label><input id="effortArm" type="number" value="0.04" step="0.01"></div><div><label>Resistance arm / m</label><input id="resistArm" type="number" value="0.30" step="0.01"></div></div>
-        <div class="result">Mechanical advantage<strong id="leverOut"></strong><div class="formula">MA = effort arm / resistance arm</div></div>
-      </article>
-
-      <article class="card span-7">
-        <h2>Topic Explainer</h2>
-        <div class="tabs">
-          <button class="tab active" data-topic="pyth">Pythagoras</button><button class="tab" data-topic="momentum">Momentum</button><button class="tab" data-topic="weight">Weight</button><button class="tab" data-topic="force">Force</button><button class="tab" data-topic="torque">Torque</button><button class="tab" data-topic="levers">Levers</button><button class="tab" data-topic="com">Center of Mass</button>
-        </div>
-        <div class="concept" id="topicBox"></div>
-      </article>
-
-      <article class="card span-5">
-        <h2>Quick Test Yourself</h2>
-        <div class="concept" id="quizBox"></div>
-        <div class="tabs" style="margin-top:12px"><button id="newQuiz">New question</button><button id="showAnswer">Show answer</button></div>
-      </article>
-
-      <article class="card span-12">
-        <h2>Formula Bank</h2>
-        <div class="mini-grid">
-          <div class="mini"><b>c = √(a²+b²)</b><span>Pythagoras</span></div><div class="mini"><b>p = mv</b><span>Momentum</span></div><div class="mini"><b>W = mg</b><span>Weight</span></div><div class="mini"><b>F = ma</b><span>Force</span></div>
-          <div class="mini"><b>J = FΔt</b><span>Impulse</span></div><div class="mini"><b>τ = Frsinθ</b><span>Torque</span></div><div class="mini"><b>Work = Fd</b><span>Work</span></div><div class="mini"><b>P = W/t</b><span>Power</span></div>
-        </div>
-      </article>
-    </section>
-    <footer>Save as index.html, host it, then embed the public URL in Notion.</footer>
-  </main>
-
-  <script>
-    const $ = id => document.getElementById(id); const num = id => Number($(id).value)||0; const safe = x => Math.max(x, .000001);
-    const topics = {
-      pyth:["Pythagoras", "Use a² + b² = c² when two components are at right angles. In biomechanics, it helps find resultant force, velocity, or displacement from horizontal and vertical parts."],
-      momentum:["Momentum", "Momentum is mass times velocity. A heavier or faster athlete has more momentum, so they require more impulse to stop or change direction."],
-      weight:["Weight", "Weight is the force caused by gravity. It equals mass times gravitational acceleration. On Earth, g is usually 9.81 m/s²."],
-      force:["Force", "Force changes motion. Newton’s second law says force equals mass times acceleration. In sport, force is used to sprint, jump, land, and change direction."],
-      torque:["Torque", "Torque is turning force around a joint or axis. It increases when force, moment arm, or the angle effect increases."],
-      levers:["Levers", "Bones act like levers, joints act like pivots, and muscles provide effort. Most body levers trade force for speed and range of motion."],
-      com:["Center of Mass", "Balance improves when your center of mass is low and your line of gravity stays inside your base of support."]
-    };
-    const quizzes = [
-      ["A runner has mass 60 kg and velocity 5 m/s. What is momentum?", "p = mv = 60 × 5 = 300 kg·m/s"],
-      ["An athlete has mass 70 kg. What is their weight on Earth?", "W = mg = 70 × 9.81 = 686.7 N"],
-      ["A triangle has sides 6 m and 8 m. What is the hypotenuse?", "c = √(6²+8²) = √100 = 10 m"],
-      ["A 500 N force acts 0.4 m from a joint at 90°. What is torque?", "τ = Frsinθ = 500 × 0.4 × 1 = 200 N·m"],
-      ["If 300 J of work is done in 2 s, what is power?", "P = W/t = 300/2 = 150 W"]
-    ]; let quiz = 0;
-    function update(){
-      const c = Math.sqrt(num('sideA')**2 + num('sideB')**2); $('pythOut').textContent = `${c.toFixed(2)}`;
-      $('momOut').textContent = `${(num('mass')*num('velocity')).toFixed(2)} kg·m/s`;
-      $('weightOut').textContent = `${(num('weightMass')*num('gravity')).toFixed(2)} N`;
-      const sp = num('distance')/safe(num('time')), ac = (num('v')-num('u'))/safe(num('time')); $('speedOut').textContent = `${sp.toFixed(2)} m/s · ${ac.toFixed(2)} m/s²`;
-      const f = num('forceMass')*num('accel'); $('forceOut').textContent = `${f.toFixed(2)} N · ${(f*num('contact')).toFixed(2)} N·s`;
-      const tq = num('torqueForce')*num('arm')*Math.sin(num('angle')*Math.PI/180); $('torqueOut').textContent = `${tq.toFixed(2)} N·m`;
-      const work = num('workForce')*num('disp'); $('workOut').textContent = `${work.toFixed(2)} J · ${(work/safe(num('powerTime'))).toFixed(2)} W`;
-      $('pressOut').textContent = `${(num('pressForce')/safe(num('area'))).toFixed(2)} Pa`;
-      $('leverOut').textContent = `${(num('effortArm')/safe(num('resistArm'))).toFixed(2)}`;
-    }
-    function showTopic(key){const t=topics[key]; $('topicBox').innerHTML=`<h3>${t[0]}</h3><p>${t[1]}</p>`; document.querySelectorAll('.tab[data-topic]').forEach(b=>b.classList.toggle('active',b.dataset.topic===key));}
-    function showQuiz(answer=false){$('quizBox').innerHTML=`<h3>Question</h3><p>${quizzes[quiz][0]}</p>${answer?`<div class="result"><strong>${quizzes[quiz][1]}</strong></div>`:''}`;}
-    document.querySelectorAll('input').forEach(i=>i.addEventListener('input',update)); document.querySelectorAll('.tab[data-topic]').forEach(b=>b.addEventListener('click',()=>showTopic(b.dataset.topic)));
-    $('newQuiz').onclick=()=>{quiz=(quiz+1)%quizzes.length;showQuiz(false)}; $('showAnswer').onclick=()=>showQuiz(true); $('themeBtn').onclick=()=>document.body.classList.toggle('dark');
-    $('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}); showTopic('pyth'); showQuiz(false); update();
-  </script>
+    <article class="card span-12"><h2>Your Formula Bank</h2><div class="formula-bank">
+      <div class="mini"><b>v = d/t</b><span>Average speed/velocity · m/s</span></div><div class="mini"><b>a = (vf−vi)/t</b><span>Acceleration · m/s²</span></div><div class="mini"><b>F = ma</b><span>Net force · N</span></div><div class="mini"><b>W = mg</b><span>Weight · N</span></div>
+      <div class="mini"><b>p = mv</b><span>Momentum · kg·m/s</span></div><div class="mini"><b>J = FΔt</b><span>Impulse · N·s</span></div><div class="mini"><b>J = Δp</b><span>Change in momentum</span></div><div class="mini"><b>ux = ucosθ</b><span>Horizontal component</span></div>
+      <div class="mini"><b>uy = usinθ</b><span>Vertical component</span></div><div class="mini"><b>v = u + at</b><span>SUVAT final velocity</span></div><div class="mini"><b>s = ut + ½at²</b><span>SUVAT displacement</span></div><div class="mini"><b>v² = u² + 2as</b><span>SUVAT no time</span></div>
+      <div class="mini"><b>ω = Δθ/t</b><span>Angular velocity</span></div><div class="mini"><b>α = (ωf−ωi)/t</b><span>Angular acceleration</span></div><div class="mini"><b>Work = Fd</b><span>Work done · J</span></div><div class="mini"><b>P = Work/t or Fv</b><span>Power · W</span></div>
+    </div></article>
+  </section>
+  <footer>Notion widget: save as index.html → host → embed public URL.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id), N=id=>Number($(id).value)||0, S=x=>Math.max(x,.000001);
+function upd(){
+ $('velocityOut').textContent=(N('d')/S(N('t'))).toFixed(2)+' m/s';
+ $('accOut').textContent=((N('vf')-N('vi'))/S(N('accTime'))).toFixed(2)+' m/s²';
+ $('forceOut').textContent=(N('mass')*N('accel')).toFixed(2)+' N';
+ $('weightOut').textContent=(N('wmass')*N('g')).toFixed(2)+' N';
+ $('momentumOut').textContent=(N('pmass')*N('pvel')).toFixed(2)+' kg·m/s';
+ $('impulseOut').textContent=(N('impForce')*N('dt')).toFixed(2)+' N·s';
+ $('deltaPOut').textContent=(N('jmass')*N('dv')).toFixed(2)+' N·s';
+ const rad=N('theta')*Math.PI/180; $('projOut').textContent=`${(N('u')*Math.cos(rad)).toFixed(2)} m/s · ${(N('u')*Math.sin(rad)).toFixed(2)} m/s`;
+ $('suvatVOut').textContent=(N('suU')+N('suA')*N('suT')).toFixed(2)+' m/s';
+ $('suvatSOut').textContent=(N('sU')*N('sT')+.5*N('sA')*N('sT')**2).toFixed(2)+' m';
+ const v2=N('ntU')**2+2*N('ntA')*N('ntS'); $('noTimeOut').textContent=v2.toFixed(2)+' m²/s², v = '+(v2>=0?Math.sqrt(v2).toFixed(2):'not real')+' m/s';
+ $('omegaOut').textContent=(N('ang')/S(N('angT'))).toFixed(2)+' °/s';
+ $('alphaOut').textContent=((N('wf')-N('wi'))/S(N('wtime'))).toFixed(2)+' rad/s² or °/s²';
+ $('workOut').textContent=(N('workF')*N('workD')).toFixed(2)+' J';
+ $('powerOut').textContent=`${(N('powerWork')/S(N('powerT'))).toFixed(2)} W · ${(N('powerF')*N('powerV')).toFixed(2)} W`;
+}
+const info={Velocity:'Finds average speed from distance and time. Useful for sprint splits and movement speed.',Acceleration:'How quickly velocity changes. Positive means speeding up; negative means slowing down.',Force:'Net force explains changes in motion. More mass or acceleration needs more force.',Weight:'Weight is gravitational force, not mass. On Earth, multiply mass by 9.81.',Momentum:'Momentum is how much motion something has. It rises with mass and velocity.',Impulse:'Impulse changes momentum. Longer contact time can reduce peak force.',Projectile:'Break launch speed into horizontal and vertical components using cos and sin.',SUVAT:'SUVAT equations work for constant acceleration only.',Angular:'Angular velocity and acceleration describe rotation around a joint or axis.',Work:'Work is force applied through distance in the force direction.',Power:'Power is how fast work is done, or force times velocity.'};
+Object.keys(info).forEach((k,i)=>{tabs.innerHTML+=`<button data-k="${k}" class="${i?'':'active'}">${k}</button>`});
+function exp(k){explain.innerHTML=`<h3>${k}</h3><p>${info[k]}</p>`;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.k===k))}tabs.onclick=e=>{if(e.target.dataset.k)exp(e.target.dataset.k)};exp('Velocity');
+const qs=[['Find velocity if distance = 30 m and time = 5 s.','v = d/t = 30/5 = 6 m/s'],['Find weight of a 70 kg person.','W = mg = 70 × 9.81 = 686.7 N'],['Find momentum if mass = 80 kg and velocity = 4 m/s.','p = mv = 80 × 4 = 320 kg·m/s'],['Find impulse if force = 500 N and time = 0.2 s.','J = FΔt = 500 × 0.2 = 100 N·s'],['Find power if work = 400 J and time = 2 s.','P = Work/t = 400/2 = 200 W']];let qi=0;function q(ans=false){quiz.innerHTML=`<h3>Question</h3><p>${qs[qi][0]}</p>${ans?'<div class="result"><strong>'+qs[qi][1]+'</strong></div>':''}`}newQ.onclick=()=>{qi=(qi+1)%qs.length;q(false)};ansQ.onclick=()=>q(true);themeBtn.onclick=()=>document.body.classList.toggle('dark');document.querySelectorAll('input').forEach(i=>i.oninput=upd);q();upd();
+</script>
 </body>
 </html>
