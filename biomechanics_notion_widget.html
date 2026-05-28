@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biomechanics Widget</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --card: #fffdf8;
+      --ink: #24201b;
+      --muted: #746b60;
+      --line: #e4ded5;
+      --accent: #6f8f72;
+      --accent-2: #d9ead7;
+      --warn: #b26b3f;
+      --shadow: 0 10px 28px rgba(36, 32, 27, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .widget {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--accent-2);
+      font-size: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--muted);
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(111, 143, 114, 0.16);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: var(--accent-2);
+      border: 1px solid #c8ddc6;
+    }
+
+    .result strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-top: 2px;
+    }
+
+    .formula {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .mini-item {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .mini-item b { display: block; margin-bottom: 3px; }
+    .mini-item span { color: var(--muted); font-size: 0.84rem; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.86rem;
+    }
+
+    button.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .concept {
+      min-height: 118px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .concept h3 { margin: 0 0 6px; }
+    .concept p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .bar-wrap {
+      height: 12px;
+      border-radius: 999px;
+      background: #ece6dd;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: inherit;
+      transition: width 0.25s ease;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 12px; }
+      header { align-items: flex-start; flex-direction: column; }
+      .span-4, .span-5, .span-7, .span-8 { grid-column: span 12; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="widget">
+    <header>
+      <div class="title">
+        <div class="icon">🦴</div>
+        <div>
+          <h1>Biomechanics Lab</h1>
+          <div class="subtitle">Quick calculators, force insight, and core study prompts.</div>
+        </div>
+      </div>
+      <div class="pill" id="today"></div>
+    </header>
+
+    <section class="grid">
+      <article class="card span-4">
+        <h2>Torque Calculator</h2>
+        <div class="row">
+          <div>
+            <label for="force">Force, F / N</label>
+            <input id="force" type="number" value="120" min="0" step="1" />
+          </div>
+          <div>
+            <label for="arm">Moment arm, r / m</label>
+            <input id="arm" type="number" value="0.35" min="0" step="0.01" />
+          </div>
+        </div>
+        <label for="angle">Angle between force and lever / degrees</label>
+        <input id="angle" type="number" value="90" min="0" max="180" step="1" />
+        <div class="result">
+          Net torque
+          <strong id="torqueOut">42.00 N·m</strong>
+          <div class="formula">τ = F × r × sinθ</div>
+        </div>
+      </article>
+
+      <article class="card span-4">
+        <h2>Impulse Calculator</h2>
+        <div class="row">
+          <div>
+            <label for="mass">Mass / kg</label>
+            <input id="mass" type="number" value="70" min="0" step="0.1" />
+          </div>
+          <div>
+            <label for="velocityChange">Δ Velocity / m/s</label>
+            <input id="velocityChange" type="number" value="2.4" step="0.1" />
+          </div>
+        </div>
+        <label for="contactTime">Contact time / s</label>
+        <input id="contactTime" type="number" value="0.18" min="0.001" step="0.01" />
+        <div class="result">
+          Avg force
+          <strong id="forceOut">933.33 N</strong>
+          <div class="formula">J = mΔv, Favg = J / Δt</div>
+        </div>
+      </article>
+
+      <article class="card span-4">
+        <h2>Power Output</h2>
+        <div class="row">
+          <div>
+            <label for="work">Work / J</label>
+            <input id="work" type="number" value="450" min="0" step="1" />
+          </div>
+          <div>
+            <label for="time">Time / s</label>
+            <input id="time" type="number" value="1.2" min="0.001" step="0.1" />
+          </div>
+        </div>
+        <label for="bodyMass">Body mass / kg</label>
+        <input id="bodyMass" type="number" value="70" min="0" step="0.1" />
+        <div class="result">
+          Relative power
+          <strong id="powerOut">5.36 W/kg</strong>
+          <div class="formula">P = W / t, relative P = P / body mass</div>
+        </div>
+      </article>
+
+      <article class="card span-7">
+        <h2>Movement Concept Cards</h2>
+        <div class="tabs">
+          <button class="tab active" data-card="levers">Levers</button>
+          <button class="tab" data-card="com">Center of Mass</button>
+          <button class="tab" data-card="gait">Gait</button>
+          <button class="tab" data-card="landing">Landing</button>
+        </div>
+        <div class="concept" id="conceptBox"></div>
+      </article>
+
+      <article class="card span-5">
+        <h2>Load Monitor</h2>
+        <label for="sessionLoad">Session load / arbitrary units</label>
+        <input id="sessionLoad" type="number" value="420" min="0" step="10" />
+        <label for="weeklyLoad">Weekly total / arbitrary units</label>
+        <input id="weeklyLoad" type="number" value="2100" min="0" step="10" />
+        <div class="result">
+          Session share
+          <strong id="loadOut">20%</strong>
+          <div class="bar-wrap"><div class="bar" id="loadBar"></div></div>
+          <div class="formula" id="loadMessage">Moderate contribution to weekly load.</div>
+        </div>
+      </article>
+
+      <article class="card span-12">
+        <h2>Biomechanics Cheat Sheet</h2>
+        <div class="mini-list">
+          <div class="mini-item"><b>Stability</b><span>Improves with a lower center of mass, wider base of support, and line of gravity inside the base.</span></div>
+          <div class="mini-item"><b>Mechanical advantage</b><span>Higher when the effort arm is longer relative to the resistance arm.</span></div>
+          <div class="mini-item"><b>Force absorption</b><span>Longer braking time generally lowers peak impact force during landing or deceleration.</span></div>
+          <div class="mini-item"><b>Angular momentum</b><span>Changes when torque is applied; conserved when external torque is minimal.</span></div>
+        </div>
+        <p class="note">Educational tool only. For clinical decisions, injury diagnosis, or rehabilitation programming, use qualified professional guidance.</p>
+      </article>
+    </section>
+
+    <footer>Designed for Notion embed · Save as HTML, host it, then paste the public URL into Notion.</footer>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const concepts = {
+      levers: {
+        title: "Levers",
+        body: "Bones act as rigid bars, joints act as axes, and muscles create force. Most human movement uses third-class levers, which favor speed and range of motion over force advantage."
+      },
+      com: {
+        title: "Center of Mass",
+        body: "The body is more stable when the center of mass is low and the line of gravity stays within the base of support. This matters in squats, balance tasks, and cutting movements."
+      },
+      gait: {
+        title: "Gait",
+        body: "Walking alternates stance and swing phases. Key observations include step length, cadence, ground contact, pelvic control, and symmetry between sides."
+      },
+      landing: {
+        title: "Landing Mechanics",
+        body: "Soft landings use hip, knee, and ankle flexion to increase braking time and distribute load. Watch knee alignment, trunk position, and controlled deceleration."
+      }
+    };
+
+    function number(id) {
+      return Number($(id).value) || 0;
+    }
+
+    function updateTorque() {
+      const torque = number("force") * number("arm") * Math.sin(number("angle") * Math.PI / 180);
+      $("torqueOut").textContent = `${torque.toFixed(2)} N·m`;
+    }
+
+    function updateImpulse() {
+      const impulse = number("mass") * number("velocityChange");
+      const force = impulse / Math.max(number("contactTime"), 0.001);
+      $("forceOut").textContent = `${force.toFixed(2)} N`;
+    }
+
+    function updatePower() {
+      const power = number("work") / Math.max(number("time"), 0.001);
+      const relativePower = power / Math.max(number("bodyMass"), 0.001);
+      $("powerOut").textContent = `${relativePower.toFixed(2)} W/kg`;
+    }
+
+    function updateLoad() {
+      const weekly = Math.max(number("weeklyLoad"), 0.001);
+      const share = Math.max(0, number("sessionLoad") / weekly * 100);
+      $("loadOut").textContent = `${share.toFixed(0)}%`;
+      $("loadBar").style.width = `${Math.min(share, 100)}%`;
+      $("loadMessage").textContent = share > 35
+        ? "High share: consider whether this session is a spike."
+        : share > 20
+          ? "Moderate-high contribution to weekly load."
+          : "Moderate contribution to weekly load.";
+    }
+
+    function showConcept(key) {
+      const item = concepts[key];
+      $("conceptBox").innerHTML = `<h3>${item.title}</h3><p>${item.body}</p>`;
+      document.querySelectorAll(".tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.card === key);
+      });
+    }
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", () => {
+        updateTorque();
+        updateImpulse();
+        updatePower();
+        updateLoad();
+      });
+    });
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.addEventListener("click", () => showConcept(button.dataset.card));
+    });
+
+    $("today").textContent = new Date().toLocaleDateString(undefined, {
+      weekday: "short", month: "short", day: "numeric"
+    });
+
+    updateTorque();
+    updateImpulse();
+    updatePower();
+    updateLoad();
+    showConcept("levers");
+  </script>
+</body>
+</html>
