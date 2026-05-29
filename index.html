@@ -73,7 +73,232 @@ function upd(){
 const info={Velocity:'Finds average speed from distance and time. Useful for sprint splits and movement speed.',Acceleration:'How quickly velocity changes. Positive means speeding up; negative means slowing down.',Force:'Net force explains changes in motion. More mass or acceleration needs more force.',Weight:'Weight is gravitational force, not mass. On Earth, multiply mass by 9.81.',Momentum:'Momentum is how much motion something has. It rises with mass and velocity.',Impulse:'Impulse changes momentum. Longer contact time can reduce peak force.',Projectile:'Break launch speed into horizontal and vertical components using cos and sin.',SUVAT:'SUVAT equations work for constant acceleration only.',Angular:'Angular velocity and acceleration describe rotation around a joint or axis.',Work:'Work is force applied through distance in the force direction.',Power:'Power is how fast work is done, or force times velocity.'};
 Object.keys(info).forEach((k,i)=>{tabs.innerHTML+=`<button data-k="${k}" class="${i?'':'active'}">${k}</button>`});
 function exp(k){explain.innerHTML=`<h3>${k}</h3><p>${info[k]}</p>`;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.k===k))}tabs.onclick=e=>{if(e.target.dataset.k)exp(e.target.dataset.k)};exp('Velocity');
-const qs=[['Find velocity if distance = 30 m and time = 5 s.','v = d/t = 30/5 = 6 m/s'],['Find weight of a 70 kg person.','W = mg = 70 × 9.81 = 686.7 N'],['Find momentum if mass = 80 kg and velocity = 4 m/s.','p = mv = 80 × 4 = 320 kg·m/s'],['Find impulse if force = 500 N and time = 0.2 s.','J = FΔt = 500 × 0.2 = 100 N·s'],['Find power if work = 400 J and time = 2 s.','P = Work/t = 400/2 = 200 W']];let qi=0;function q(ans=false){quiz.innerHTML=`<h3>Question</h3><p>${qs[qi][0]}</p>${ans?'<div class="result"><strong>'+qs[qi][1]+'</strong></div>':''}`}newQ.onclick=()=>{qi=(qi+1)%qs.length;q(false)};ansQ.onclick=()=>q(true);themeBtn.onclick=()=>document.body.classList.toggle('dark');document.querySelectorAll('input').forEach(i=>i.oninput=upd);q();upd();
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function dec(min,max){return Number((Math.random()*(max-min)+min).toFixed(2))}
+
+let score = 0;
+let total = 0;
+let currentQuiz = null;
+
+const quizTypes = [
+  {
+    topic:'Velocity', level:'Easy',
+    make(){
+      const d=rand(10,100), t=rand(2,20), ans=d/t;
+      return {
+        q:`Find velocity if distance = ${d} m and time = ${t} s.`,
+        hint:'Use v = d/t',
+        answer:`v = ${d}/${t} = ${ans.toFixed(2)} m/s`,
+        unit:'m/s'
+      }
+    }
+  },
+  {
+    topic:'Acceleration', level:'Easy',
+    make(){
+      const vi=rand(0,8), vf=rand(10,25), t=rand(2,8), ans=(vf-vi)/t;
+      return {
+        q:`Find acceleration if vf = ${vf} m/s, vi = ${vi} m/s, t = ${t} s.`,
+        hint:'Use a = (vf − vi)/t',
+        answer:`a = (${vf}−${vi})/${t} = ${ans.toFixed(2)} m/s²`,
+        unit:'m/s²'
+      }
+    }
+  },
+  {
+    topic:'Force', level:'Easy',
+    make(){
+      const m=rand(40,110), a=rand(1,8), ans=m*a;
+      return {
+        q:`Find force if mass = ${m} kg and acceleration = ${a} m/s².`,
+        hint:'Use F = ma',
+        answer:`F = ${m} × ${a} = ${ans} N`,
+        unit:'N'
+      }
+    }
+  },
+  {
+    topic:'Weight', level:'Easy',
+    make(){
+      const m=rand(40,110), ans=m*9.81;
+      return {
+        q:`Find weight if mass = ${m} kg.`,
+        hint:'Use W = mg, where g = 9.81 m/s²',
+        answer:`W = ${m} × 9.81 = ${ans.toFixed(2)} N`,
+        unit:'N'
+      }
+    }
+  },
+  {
+    topic:'Momentum', level:'Easy',
+    make(){
+      const m=rand(40,110), v=rand(2,12), ans=m*v;
+      return {
+        q:`Find momentum if mass = ${m} kg and velocity = ${v} m/s.`,
+        hint:'Use p = mv',
+        answer:`p = ${m} × ${v} = ${ans} kg·m/s`,
+        unit:'kg·m/s'
+      }
+    }
+  },
+  {
+    topic:'Impulse', level:'Medium',
+    make(){
+      const F=rand(200,1500), t=dec(0.1,0.6), ans=F*t;
+      return {
+        q:`Find impulse if force = ${F} N and contact time = ${t} s.`,
+        hint:'Use J = FΔt',
+        answer:`J = ${F} × ${t} = ${ans.toFixed(2)} N·s`,
+        unit:'N·s'
+      }
+    }
+  },
+  {
+    topic:'Projectile Motion', level:'Medium',
+    make(){
+      const u=rand(8,30), angle=[15,30,45,60,75][rand(0,4)];
+      const ux=u*Math.cos(angle*Math.PI/180);
+      const uy=u*Math.sin(angle*Math.PI/180);
+      return {
+        q:`Find ux and uy if launch speed = ${u} m/s and angle = ${angle}°.`,
+        hint:'Use ux = ucosθ and uy = usinθ',
+        answer:`ux = ${ux.toFixed(2)} m/s, uy = ${uy.toFixed(2)} m/s`,
+        unit:'m/s'
+      }
+    }
+  },
+  {
+    topic:'SUVAT', level:'Medium',
+    make(){
+      const u=rand(0,12), a=rand(1,6), t=rand(2,8), ans=u+a*t;
+      return {
+        q:`Find final velocity if u = ${u} m/s, a = ${a} m/s², t = ${t} s.`,
+        hint:'Use v = u + at',
+        answer:`v = ${u} + ${a}×${t} = ${ans} m/s`,
+        unit:'m/s'
+      }
+    }
+  },
+  {
+    topic:'SUVAT', level:'Hard',
+    make(){
+      const u=rand(0,10), a=rand(1,5), t=rand(2,8);
+      const ans=u*t+0.5*a*t*t;
+      return {
+        q:`Find displacement if u = ${u} m/s, a = ${a} m/s², t = ${t} s.`,
+        hint:'Use s = ut + ½at²',
+        answer:`s = ${u}×${t} + ½×${a}×${t}² = ${ans.toFixed(2)} m`,
+        unit:'m'
+      }
+    }
+  },
+  {
+    topic:'Work', level:'Medium',
+    make(){
+      const F=rand(100,1000), d=dec(0.2,3), ans=F*d;
+      return {
+        q:`Find work if force = ${F} N and distance = ${d} m.`,
+        hint:'Use Work = Fd',
+        answer:`Work = ${F} × ${d} = ${ans.toFixed(2)} J`,
+        unit:'J'
+      }
+    }
+  },
+  {
+    topic:'Power', level:'Medium',
+    make(){
+      const W=rand(100,1500), t=rand(1,8), ans=W/t;
+      return {
+        q:`Find power if work = ${W} J and time = ${t} s.`,
+        hint:'Use P = Work/t',
+        answer:`P = ${W}/${t} = ${ans.toFixed(2)} W`,
+        unit:'W'
+      }
+    }
+  },
+  {
+    topic:'Angular Velocity', level:'Hard',
+    make(){
+      const angle=[90,180,270,360,540,720][rand(0,5)], t=rand(1,8), ans=angle/t;
+      return {
+        q:`Find angular velocity if Δθ = ${angle}° and time = ${t} s.`,
+        hint:'Use ω = Δθ/t',
+        answer:`ω = ${angle}/${t} = ${ans.toFixed(2)} °/s`,
+        unit:'°/s'
+      }
+    }
+  }
+];
+
+function newRandomQuiz(){
+  const level = document.getElementById('difficulty')?.value || 'All';
+  let pool = quizTypes;
+  if(level !== 'All') pool = quizTypes.filter(x => x.level === level);
+
+  currentQuiz = pool[rand(0,pool.length-1)].make();
+
+  quiz.innerHTML = `
+    <h3>${currentQuiz.topic} · ${currentQuiz.level}</h3>
+    <p>${currentQuiz.q}</p>
+    <div style="margin-top:12px">
+      <input id="studentAnswer" placeholder="Type your answer + unit">
+    </div>
+  `;
+}
+
+function showRandomAnswer(){
+  quiz.innerHTML += `
+    <div class="result">
+      <strong>${currentQuiz.answer}</strong>
+      <div class="formula">Expected unit: ${currentQuiz.unit}</div>
+    </div>
+  `;
+}
+
+function showHint(){
+  quiz.innerHTML += `
+    <div class="result">
+      <strong>Hint</strong>
+      <div class="formula">${currentQuiz.hint}</div>
+    </div>
+  `;
+}
+
+function markCorrect(){
+  total++;
+  score++;
+  quiz.innerHTML += `<div class="result"><strong>Correct ✅</strong><div class="formula">Score: ${score}/${total}</div></div>`;
+}
+
+function markWrong(){
+  total++;
+  quiz.innerHTML += `<div class="result"><strong>Try again ❌</strong><div class="formula">Score: ${score}/${total}</div></div>`;
+}
+
+const controls = document.createElement('div');
+controls.className = 'tabs';
+controls.style.marginTop = '12px';
+controls.innerHTML = `
+  <select id="difficulty">
+    <option>All</option>
+    <option>Easy</option>
+    <option>Medium</option>
+    <option>Hard</option>
+  </select>
+  <button id="hintBtn">Hint</button>
+  <button id="correctBtn">Mark Correct</button>
+  <button id="wrongBtn">Mark Wrong</button>
+`;
+quiz.parentElement.appendChild(controls);
+
+newQ.onclick = newRandomQuiz;
+ansQ.onclick = showRandomAnswer;
+hintBtn.onclick = showHint;
+correctBtn.onclick = markCorrect;
+wrongBtn.onclick = markWrong;
+
+newRandomQuiz();
+upd();
 </script>
 </body>
 </html>
