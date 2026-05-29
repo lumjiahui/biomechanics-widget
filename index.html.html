@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Biomechanics Revision App</title>
+<style>
+:root{--bg:#f7f5f1;--card:#fffdf8;--ink:#24201b;--muted:#746b60;--line:#e4ded5;--accent:#6f8f72;--accent2:#d9ead7;--soft:#f0ebe3;--bad:#b85c5c;--good:#4f8655;--shadow:0 10px 28px rgba(36,32,27,.08)}
+body.dark{--bg:#171714;--card:#22211d;--ink:#f4efe6;--muted:#b7aea2;--line:#38352f;--accent:#9ec79f;--accent2:#263827;--soft:#2d2b26;--shadow:0 10px 28px rgba(0,0,0,.25)}
+*{box-sizing:border-box}body{margin:0;padding:18px;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+main{max-width:1180px;margin:auto}header{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:16px}.title{display:flex;gap:12px;align-items:center}.icon{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;background:var(--accent2);font-size:26px;box-shadow:var(--shadow)}h1{margin:0;font-size:clamp(1.35rem,3vw,2rem)}.subtitle{color:var(--muted);font-size:.92rem;margin-top:4px}
+button,.pill,select{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 12px;border-radius:999px;font-size:.86rem}button{cursor:pointer}button.active{background:var(--accent);color:white;border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+h2{margin:0 0 12px;font-size:1rem}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.concept{padding:16px;border-radius:18px;background:var(--bg);border:1px solid var(--line);min-height:145px}.concept p{color:var(--muted);line-height:1.45}
+input{width:100%;padding:11px;border-radius:15px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:.95rem;margin-top:10px}.result{margin-top:12px;padding:13px;border-radius:18px;background:var(--accent2);border:1px solid var(--line)}.result strong{display:block;font-size:1.15rem;margin-top:3px}.bad{background:#f5dada}.good{background:#dcefdc}.dark .bad{background:#3b2323}.dark .good{background:#203823}.formula,.note{color:var(--muted);font-size:.78rem;line-height:1.4;margin-top:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:12px}.stat b{font-size:1.35rem;display:block}.stat span{color:var(--muted);font-size:.78rem}
+.formula-bank{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini{padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}.mini b{display:block;margin-bottom:3px}.mini span{color:var(--muted);font-size:.78rem}
+.progress{height:12px;border-radius:999px;background:var(--soft);overflow:hidden}.bar{height:100%;width:0;background:var(--accent);transition:.25s}
+footer{text-align:center;color:var(--muted);font-size:.76rem;margin-top:14px}
+@media(max-width:850px){body{padding:12px}header{align-items:flex-start;flex-direction:column}.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.formula-bank,.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="title"><div class="icon">🧠</div><div><h1>Biomechanics Revision App</h1><div class="subtitle">Random questions, multiple choice, exam mode, hints, scoring, streaks, and formula practice.</div></div></div>
+  <button id="themeBtn">Dark mode</button>
+</header>
+
+<section class="grid">
+  <article class="card span-8">
+    <h2>Practice Mode</h2>
+    <div class="tabs">
+      <select id="topicSelect"><option>All Topics</option></select>
+      <select id="levelSelect"><option>All Levels</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
+      <button id="modeWritten" class="active">Written</button>
+      <button id="modeMCQ">Multiple Choice</button>
+    </div>
+    <div class="concept" id="quizBox"></div>
+    <div class="tabs" style="margin-top:12px">
+      <button id="newBtn">New Question</button>
+      <button id="hintBtn">Hint</button>
+      <button id="answerBtn">Show Answer</button>
+      <button id="checkBtn">Check Written</button>
+      <button id="correctBtn">Mark Correct</button>
+      <button id="wrongBtn">Mark Wrong</button>
+    </div>
+  </article>
+
+  <article class="card span-4">
+    <h2>Your Score</h2>
+    <div class="stats">
+      <div class="stat"><b id="scoreOut">0/0</b><span>Score</span></div>
+      <div class="stat"><b id="percentOut">0%</b><span>Accuracy</span></div>
+      <div class="stat"><b id="streakOut">0</b><span>Streak</span></div>
+      <div class="stat"><b id="bestOut">0</b><span>Best</span></div>
+    </div>
+    <div class="result"><strong id="feedback">Ready.</strong><div class="formula">Tip: use hints first, then try without them.</div></div>
+  </article>
+
+  <article class="card span-7">
+    <h2>Exam Mode</h2>
+    <div class="tabs">
+      <select id="examLength"><option>10</option><option>20</option><option>30</option></select>
+      <button id="startExam">Start Exam</button>
+      <button id="finishExam">Finish Exam</button>
+    </div>
+    <div class="concept" id="examBox"><p>Start an exam to answer a set of random questions. Answers stay hidden until you finish.</p></div>
+    <div class="progress" style="margin-top:12px"><div id="examBar" class="bar"></div></div>
+  </article>
+
+  <article class="card span-5">
+    <h2>Formula Hints</h2>
+    <div class="concept" id="formulaHint"><p>Select a topic or generate a question to see the matching formula guidance.</p></div>
+  </article>
+
+  <article class="card span-12">
+    <h2>Formula Bank</h2>
+    <div class="formula-bank" id="bank"></div>
+  </article>
+</section>
+<footer>Save as index.html → host on Netlify/GitHub Pages → embed in Notion.</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const dec=(a,b)=>Number((Math.random()*(b-a)+a).toFixed(2));
+let score=0,total=0,streak=0,best=Number(localStorage.bioBest||0),writtenMode=true,current=null,exam=[],examIndex=0,examScore=0;
+
+const formulas=[
+['Velocity','v = d/t','m/s','Average speed or velocity'],
+['Acceleration','a = (vf − vi)/t','m/s²','Change in velocity over time'],
+['Force','F = ma','N','Net force'],
+['Weight','W = mg','N','Gravitational force'],
+['Momentum','p = mv','kg·m/s','Mass in motion'],
+['Impulse','J = FΔt','N·s','Force over contact time'],
+['Change in Momentum','J = Δp = m(vf − vi)','N·s','Impulse from velocity change'],
+['Projectile Components','ux = ucosθ, uy = usinθ','m/s','Horizontal and vertical launch parts'],
+['SUVAT Final Velocity','v = u + at','m/s','Final velocity with constant acceleration'],
+['SUVAT Displacement','s = ut + ½at²','m','Displacement with constant acceleration'],
+['SUVAT No Time','v² = u² + 2as','m²/s²','Links velocity and displacement'],
+['Angular Velocity','ω = Δθ/t','rad/s or °/s','Rotational speed'],
+['Angular Acceleration','α = (ωf − ωi)/t','rad/s² or °/s²','Change in angular velocity'],
+['Work','Work = Fd','J','Force through distance'],
+['Power','P = Work/t or P = Fv','W','Rate of doing work']
+];
+
+const gens=[
+{topic:'Velocity',level:'Easy',make(){let d=rand(10,120),t=rand(2,20),a=d/t;return Q(this,`Find velocity if distance = ${d} m and time = ${t} s.`,`v = d/t = ${d}/${t} = ${a.toFixed(2)} m/s`,a,'m/s','Use v = d/t')}},
+{topic:'Acceleration',level:'Easy',make(){let vi=rand(0,8),vf=rand(9,28),t=rand(2,8),a=(vf-vi)/t;return Q(this,`Find acceleration if vf = ${vf} m/s, vi = ${vi} m/s, t = ${t} s.`,`a = (${vf}−${vi})/${t} = ${a.toFixed(2)} m/s²`,a,'m/s²','Use a = (vf − vi)/t')}},
+{topic:'Force',level:'Easy',make(){let m=rand(40,110),a=rand(1,8),x=m*a;return Q(this,`Find force if mass = ${m} kg and acceleration = ${a} m/s².`,`F = ma = ${m} × ${a} = ${x} N`,x,'N','Use F = ma')}},
+{topic:'Weight',level:'Easy',make(){let m=rand(40,120),x=m*9.81;return Q(this,`Find weight if mass = ${m} kg.`,`W = mg = ${m} × 9.81 = ${x.toFixed(2)} N`,x,'N','Use W = mg, g = 9.81')}},
+{topic:'Momentum',level:'Easy',make(){let m=rand(40,110),v=rand(2,12),x=m*v;return Q(this,`Find momentum if mass = ${m} kg and velocity = ${v} m/s.`,`p = mv = ${m} × ${v} = ${x} kg·m/s`,x,'kg·m/s','Use p = mv')}},
+{topic:'Impulse',level:'Medium',make(){let F=rand(200,1600),t=dec(.1,.7),x=F*t;return Q(this,`Find impulse if force = ${F} N and contact time = ${t} s.`,`J = FΔt = ${F} × ${t} = ${x.toFixed(2)} N·s`,x,'N·s','Use J = FΔt')}},
+{topic:'Change in Momentum',level:'Medium',make(){let m=rand(40,110),vi=rand(0,5),vf=rand(6,14),x=m*(vf-vi);return Q(this,`Find impulse if mass = ${m} kg, vi = ${vi} m/s, vf = ${vf} m/s.`,`J = m(vf−vi) = ${m}(${vf}−${vi}) = ${x} N·s`,x,'N·s','Use J = Δp = m(vf − vi)')}},
+{topic:'Projectile Components',level:'Medium',make(){let u=rand(8,32),ang=[15,30,45,60,75][rand(0,4)],ux=u*Math.cos(ang*Math.PI/180),uy=u*Math.sin(ang*Math.PI/180);return Q(this,`Find ux and uy if launch speed = ${u} m/s and angle = ${ang}°.`,`ux = ${ux.toFixed(2)} m/s, uy = ${uy.toFixed(2)} m/s`,ux,'m/s','Use ux = ucosθ and uy = usinθ')}},
+{topic:'SUVAT Final Velocity',level:'Medium',make(){let u=rand(0,12),a=rand(1,6),t=rand(2,8),x=u+a*t;return Q(this,`Find final velocity if u = ${u} m/s, a = ${a} m/s², t = ${t} s.`,`v = u + at = ${u} + ${a}×${t} = ${x} m/s`,x,'m/s','Use v = u + at')}},
+{topic:'SUVAT Displacement',level:'Hard',make(){let u=rand(0,10),a=rand(1,5),t=rand(2,8),x=u*t+.5*a*t*t;return Q(this,`Find displacement if u = ${u} m/s, a = ${a} m/s², t = ${t} s.`,`s = ut + ½at² = ${x.toFixed(2)} m`,x,'m','Use s = ut + ½at²')}},
+{topic:'SUVAT No Time',level:'Hard',make(){let u=rand(1,10),a=rand(1,5),s=rand(4,25),v2=u*u+2*a*s,x=Math.sqrt(v2);return Q(this,`Find final velocity if u = ${u} m/s, a = ${a} m/s², s = ${s} m.`,`v² = ${u*u} + 2(${a})(${s}) = ${v2}; v = ${x.toFixed(2)} m/s`,x,'m/s','Use v² = u² + 2as')}},
+{topic:'Angular Velocity',level:'Hard',make(){let ang=[90,180,270,360,540,720][rand(0,5)],t=rand(1,8),x=ang/t;return Q(this,`Find angular velocity if Δθ = ${ang}° and t = ${t} s.`,`ω = Δθ/t = ${ang}/${t} = ${x.toFixed(2)} °/s`,x,'°/s','Use ω = Δθ/t')}},
+{topic:'Angular Acceleration',level:'Hard',make(){let wi=rand(0,8),wf=rand(10,30),t=rand(2,8),x=(wf-wi)/t;return Q(this,`Find angular acceleration if ωf = ${wf}, ωi = ${wi}, t = ${t} s.`,`α = (${wf}−${wi})/${t} = ${x.toFixed(2)} rad/s²`,x,'rad/s²','Use α = (ωf − ωi)/t')}},
+{topic:'Work',level:'Medium',make(){let F=rand(100,1000),d=dec(.2,3),x=F*d;return Q(this,`Find work if force = ${F} N and distance = ${d} m.`,`Work = Fd = ${F} × ${d} = ${x.toFixed(2)} J`,x,'J','Use Work = Fd')}},
+{topic:'Power',level:'Medium',make(){let W=rand(100,1600),t=rand(1,8),x=W/t;return Q(this,`Find power if work = ${W} J and time = ${t} s.`,`P = Work/t = ${W}/${t} = ${x.toFixed(2)} W`,x,'W','Use P = Work/t')}},
+{topic:'Power',level:'Hard',make(){let F=rand(100,800),v=rand(2,10),x=F*v;return Q(this,`Find power if force = ${F} N and velocity = ${v} m/s.`,`P = Fv = ${F} × ${v} = ${x} W`,x,'W','Use P = Fv')}}
+];
+
+function Q(g,q,answer,value,unit,hint){return {topic:g.topic,level:g.level,q,answer,value:Number(value),unit,hint}}
+function pool(){let topic=$('topicSelect').value,level=$('levelSelect').value;return gens.filter(g=>(topic==='All Topics'||g.topic===topic)&&(level==='All Levels'||g.level===level))}
+function makeQuestion(){let p=pool();return p[rand(0,p.length-1)].make()}
+function updateStats(){total=Math.max(total,0);$('scoreOut').textContent=`${score}/${total}`;$('percentOut').textContent=total?Math.round(score/total*100)+'%':'0%';$('streakOut').textContent=streak;$('bestOut').textContent=best}
+function showFormula(topic){let f=formulas.find(x=>x[0]===topic)||formulas[0];$('formulaHint').innerHTML=`<h3>${f[0]}</h3><p><b>${f[1]}</b></p><p>${f[3]}</p><div class="formula">Unit: ${f[2]}</div>`}
+function newQuestion(){current=makeQuestion();showFormula(current.topic);let html=`<h3>${current.topic} · ${current.level}</h3><p>${current.q}</p>`;if(writtenMode){html+=`<input id="studentAnswer" placeholder="Type number or answer + unit">`}else{let opts=mcqOptions(current);html+=`<div class="tabs">${opts.map(o=>`<button onclick="chooseMCQ(${o.correct})">${o.text}</button>`).join('')}</div>`}$('quizBox').innerHTML=html;$('feedback').textContent='Question loaded.'}
+function mcqOptions(q){let arr=[{text:q.answer,correct:true}];for(let i=0;i<3;i++){let fake=q.value*(1+[-.4,-.25,.25,.5][i]);arr.push({text:`${fake.toFixed(2)} ${q.unit}`,correct:false})}return arr.sort(()=>Math.random()-.5)}
+function chooseMCQ(ok){total++; if(ok){score++;streak++;best=Math.max(best,streak);$('feedback').textContent='Correct ✅'}else{streak=0;$('feedback').textContent='Wrong ❌'} localStorage.bioBest=best;updateStats(); $('quizBox').innerHTML+=`<div class="result ${ok?'good':'bad'}"><strong>${ok?'Correct':'Wrong'}</strong><div class="formula">${current.answer}</div></div>`}
+function showAnswer(){if(!current)newQuestion();$('quizBox').innerHTML+=`<div class="result"><strong>${current.answer}</strong><div class="formula">Expected unit: ${current.unit}</div></div>`}
+function showHint(){if(!current)newQuestion();$('quizBox').innerHTML+=`<div class="result"><strong>Hint</strong><div class="formula">${current.hint}</div></div>`}
+function checkWritten(){let el=$('studentAnswer'); if(!el){return} let val=parseFloat(String(el.value).replace(/[^\d.-]/g,'')); let ok=Math.abs(val-current.value)<=Math.max(.05,Math.abs(current.value)*.03); total++; if(ok){score++;streak++;best=Math.max(best,streak)}else{streak=0} localStorage.bioBest=best;updateStats();$('quizBox').innerHTML+=`<div class="result ${ok?'good':'bad'}"><strong>${ok?'Correct ✅':'Not quite ❌'}</strong><div class="formula">${current.answer}</div></div>`}
+function manual(ok){total++; if(ok){score++;streak++;best=Math.max(best,streak)}else{streak=0}localStorage.bioBest=best;updateStats();$('feedback').textContent=ok?'Marked correct.':'Marked wrong.'}
+function startExam(){exam=[];examIndex=0;examScore=0;let n=Number($('examLength').value);for(let i=0;i<n;i++)exam.push(makeQuestion());renderExam()}
+function renderExam(){if(examIndex>=exam.length){finishExam();return}let q=exam[examIndex];$('examBox').innerHTML=`<h3>Question ${examIndex+1}/${exam.length}</h3><p>${q.q}</p><input id="examAns" placeholder="Type answer"><div class="tabs" style="margin-top:12px"><button onclick="submitExam()">Submit</button><button onclick="skipExam()">Skip</button></div>`;$('examBar').style.width=(examIndex/exam.length*100)+'%'}
+function submitExam(){let q=exam[examIndex],val=parseFloat(String($('examAns').value).replace(/[^\d.-]/g,''));if(Math.abs(val-q.value)<=Math.max(.05,Math.abs(q.value)*.03))examScore++;examIndex++;renderExam()}
+function skipExam(){examIndex++;renderExam()}
+function finishExam(){if(!exam.length)return;$('examBar').style.width='100%';$('examBox').innerHTML=`<h3>Exam finished</h3><p>Score: ${examScore}/${exam.length} (${Math.round(examScore/exam.length*100)}%)</p><div class="result"><strong>Review</strong><div class="formula">${exam.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>')}</div></div>`}
+
+$('bank').innerHTML=formulas.map(f=>`<div class="mini"><b>${f[1]}</b><span>${f[0]} · ${f[2]}</span></div>`).join('');
+[...new Set(gens.map(g=>g.topic))].forEach(t=>$('topicSelect').innerHTML+=`<option>${t}</option>`);
+$('newBtn').onclick=newQuestion;$('answerBtn').onclick=showAnswer;$('hintBtn').onclick=showHint;$('checkBtn').onclick=checkWritten;$('correctBtn').onclick=()=>manual(true);$('wrongBtn').onclick=()=>manual(false);
+$('modeWritten').onclick=()=>{writtenMode=true;$('modeWritten').classList.add('active');$('modeMCQ').classList.remove('active');newQuestion()};
+$('modeMCQ').onclick=()=>{writtenMode=false;$('modeMCQ').classList.add('active');$('modeWritten').classList.remove('active');newQuestion()};
+$('themeBtn').onclick=()=>document.body.classList.toggle('dark');$('startExam').onclick=startExam;$('finishExam').onclick=finishExam;
+updateStats();newQuestion();
+</script>
+</body>
+</html>
